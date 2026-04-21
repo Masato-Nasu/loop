@@ -5,7 +5,7 @@
 
 ## 実行
 
-https://loop-8jb.pages.dev/
+https://masato-nasu.github.io/loop/
 
 ## 特徴
 
@@ -81,25 +81,6 @@ https://loop-8jb.pages.dev/
 1. ブラウザで開く
 2. メニューを開く
 3. **アプリをインストール** または **ホーム画面に追加**
-
-## ローカル確認
-
-```bash
-python -m http.server 8000
-```
-
-その後、ブラウザで以下を開きます。
-
-```text
-http://localhost:8000
-```
-
-## デプロイ（Cloudflare Pages）
-
-```bash
-npx wrangler pages project create loop --production-branch main
-npx wrangler pages deploy . --project-name loop
-```
 
 ## メモ
 
