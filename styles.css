@@ -1,0 +1,202 @@
+:root {
+  --bg: #111111;
+  --panel: #181818;
+  --panel-2: #202020;
+  --text: rgba(255,255,255,0.92);
+  --muted: rgba(255,255,255,0.56);
+  --line: rgba(255,255,255,0.08);
+  --accent: #ffffff;
+  --danger: #ff4b4b;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  height: 100%;
+}
+body {
+  min-height: 100dvh;
+}
+button, input, select, textarea { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
+.app-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: calc(10px + var(--safe-top)) 10px calc(12px + var(--safe-bottom));
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.title-wrap h1 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+.title-wrap p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.status {
+  flex-shrink: 0;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.viewer-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+.viewer {
+  position: relative;
+  width: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset;
+  aspect-ratio: 1 / 1;
+  max-height: min(62vh, 62vw);
+  margin: 0 auto;
+}
+.video-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+.hidden { display: none !important; }
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.24), rgba(0,0,0,0.5));
+}
+.hero-btn, .btn, .chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+}
+.hero-btn {
+  min-width: 128px;
+  padding: 14px 18px;
+  font-size: 16px;
+  background: rgba(255,255,255,0.12);
+}
+.recording-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.64);
+  backdrop-filter: blur(8px);
+  font-size: 13px;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--danger);
+  box-shadow: 0 0 0 0 rgba(255,75,75,0.6);
+  animation: pulse 1.2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255,75,75,0.6); }
+  70% { box-shadow: 0 0 0 10px rgba(255,75,75,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,75,75,0); }
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn {
+  flex: 1 1 0;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: var(--panel);
+}
+.btn.primary {
+  background: rgba(255,255,255,0.16);
+}
+.btn:disabled {
+  opacity: 0.42;
+}
+.filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+}
+.chip {
+  min-height: 42px;
+  padding: 9px 8px;
+  background: var(--panel);
+  color: var(--muted);
+}
+.chip.active {
+  background: rgba(255,255,255,0.16);
+  color: var(--text);
+}
+.hidden-canvas {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* filters */
+.viewer.original .video-layer { filter: none; }
+.viewer.bw .video-layer { filter: grayscale(1) contrast(1.02); }
+.viewer.soft .video-layer { filter: saturate(0.85) brightness(1.04) blur(0.35px); }
+.viewer.contrast .video-layer { filter: contrast(1.28) saturate(1.04); }
+.viewer.warm .video-layer { filter: sepia(0.24) saturate(1.14) hue-rotate(-10deg) brightness(1.03); }
+.viewer.cool .video-layer { filter: saturate(0.92) hue-rotate(14deg) contrast(1.03) brightness(1.02); }
+
+@media (min-width: 700px) {
+  .app-shell {
+    max-width: 720px;
+    margin: 0 auto;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .viewer {
+    max-height: min(64vh, 620px);
+  }
+  .filters {
+    grid-template-columns: repeat(6, minmax(0,1fr));
+  }
+}

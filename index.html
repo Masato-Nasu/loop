@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111111" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="3秒固定で撮って、そのままループにするPWA" />
+  <title>LOOP</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="title-wrap">
+        <h1>LOOP</h1>
+        <p>3秒だけ撮って、ループにします。</p>
+      </div>
+      <div id="status" class="status">Ready</div>
+    </header>
+
+    <section class="viewer-wrap">
+      <div id="viewer" class="viewer original">
+        <video id="liveVideo" class="video-layer" playsinline muted autoplay></video>
+        <video id="playbackVideo" class="video-layer hidden" playsinline muted loop></video>
+        <div id="overlay" class="overlay">
+          <button id="openCameraBtn" class="hero-btn">Camera</button>
+        </div>
+        <div id="recordingBadge" class="recording-badge hidden">
+          <span class="dot"></span>
+          <span id="recordingCountdown">3.0</span>s
+        </div>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="row main-actions">
+        <button id="recordBtn" class="btn primary" disabled>Record 3s</button>
+        <button id="retakeBtn" class="btn" disabled>Retake</button>
+      </div>
+
+      <div class="row filters" role="group" aria-label="Filters">
+        <button class="chip active" data-filter="original">Original</button>
+        <button class="chip" data-filter="bw">B&W</button>
+        <button class="chip" data-filter="soft">Soft</button>
+        <button class="chip" data-filter="contrast">Contrast</button>
+        <button class="chip" data-filter="warm">Warm</button>
+        <button class="chip" data-filter="cool">Cool</button>
+      </div>
+
+      <div class="row export-actions">
+        <button id="saveWebmBtn" class="btn" disabled>Save WebM</button>
+        <button id="saveJpegBtn" class="btn" disabled>Save JPEG</button>
+      </div>
+    </section>
+
+    <canvas id="workCanvas" class="hidden-canvas"></canvas>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
