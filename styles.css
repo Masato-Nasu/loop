@@ -139,6 +139,14 @@ button { -webkit-tap-highlight-color: transparent; }
   flex-direction: column;
   gap: 10px;
 }
+
+.camera-actions .btn {
+  min-height: 40px;
+}
+.camera-actions .btn.active-cam {
+  background: rgba(255,255,255,0.16);
+  color: var(--text);
+}
 .row {
   display: flex;
   gap: 8px;

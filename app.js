@@ -5,6 +5,8 @@ const statusEl = document.getElementById('status');
 const openCameraBtn = document.getElementById('openCameraBtn');
 const recordBtn = document.getElementById('recordBtn');
 const retakeBtn = document.getElementById('retakeBtn');
+const rearCameraBtn = document.getElementById('rearCameraBtn');
+const frontCameraBtn = document.getElementById('frontCameraBtn');
 const saveWebmBtn = document.getElementById('saveWebmBtn');
 const saveJpegBtn = document.getElementById('saveJpegBtn');
 const viewer = document.getElementById('viewer');
@@ -24,6 +26,7 @@ let countdownTimer = null;
 let capturedBlob = null;
 let capturedURL = null;
 let selectedFilter = 'original';
+let currentFacing = 'environment';
 
 function setStatus(text) {
   statusEl.textContent = text;
@@ -36,6 +39,8 @@ function updateButtons() {
   retakeBtn.disabled = !hasCapture && !hasStream;
   saveWebmBtn.disabled = !hasCapture;
   saveJpegBtn.disabled = !hasCapture;
+  rearCameraBtn.classList.toggle('active-cam', currentFacing === 'environment');
+  frontCameraBtn.classList.toggle('active-cam', currentFacing === 'user');
 }
 
 function stopStream() {
@@ -45,7 +50,7 @@ function stopStream() {
   }
 }
 
-async function openCamera() {
+async function openCamera(forceFacing = currentFacing) {
   try {
     stopStream();
     if (capturedURL) {
@@ -57,11 +62,12 @@ async function openCamera() {
     playbackVideo.classList.add('hidden');
     liveVideo.classList.remove('hidden');
     overlay.classList.add('hidden');
-    setStatus('Opening camera...');
+    currentFacing = forceFacing;
+    setStatus(currentFacing === 'user' ? 'Opening front camera...' : 'Opening rear camera...');
 
     stream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: { ideal: 'environment' },
+        facingMode: currentFacing,
         width: { ideal: 1080 },
         height: { ideal: 1080 }
       },
@@ -70,7 +76,7 @@ async function openCamera() {
 
     liveVideo.srcObject = stream;
     await liveVideo.play();
-    setStatus('Camera ready');
+    setStatus(currentFacing === 'user' ? 'Front camera ready' : 'Rear camera ready');
   } catch (err) {
     console.error(err);
     overlay.classList.remove('hidden');
@@ -302,11 +308,21 @@ function resetToCamera() {
   playbackVideo.classList.add('hidden');
   liveVideo.classList.remove('hidden');
   overlay.classList.toggle('hidden', !!stream);
-  setStatus(stream ? 'Camera ready' : 'Ready');
+  setStatus(stream ? (currentFacing === 'user' ? 'Front camera ready' : 'Rear camera ready') : 'Ready');
   updateButtons();
 }
 
-openCameraBtn.addEventListener('click', openCamera);
+rearCameraBtn.addEventListener('click', async () => {
+  currentFacing = 'environment';
+  updateButtons();
+  await openCamera('environment');
+});
+frontCameraBtn.addEventListener('click', async () => {
+  currentFacing = 'user';
+  updateButtons();
+  await openCamera('user');
+});
+openCameraBtn.addEventListener('click', () => openCamera(currentFacing));
 recordBtn.addEventListener('click', startRecord);
 retakeBtn.addEventListener('click', async () => {
   clearTimeout(recordTimer);
